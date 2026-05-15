@@ -10,7 +10,7 @@ Tailscale assigns every machine a stable DNS name through MagicDNS, but those
 names are long and awkward:
 
 ```
-elitebook.tail12345.ts.net
+i.e. myhost.bilberry-diphda.ts.net
 ```
 
 MagicDNS also requires it to be enabled in the Tailscale admin console, rewrites
@@ -22,7 +22,7 @@ This module takes a different approach: it reads the peer list directly from the
 short `.tail` suffix:
 
 ```
-elitebook.tail  →  100.66.68.66
+i.e. myhost.tail  → your hosts ipv4 address 
 ```
 
 No MagicDNS. No DNS rewrites. No admin console changes. Just add one word to
@@ -149,8 +149,13 @@ I/O, no latency.
 
 - Only IPv4 Tailscale addresses are returned. IPv6 (`fd7a:…`) addresses are
   currently ignored.
-- The cache TTL is fixed at 24 hours. If a peer comes online mid-day and you need
-  it immediately, delete the cache file to force a refresh:
+- When a lookup fails because the peer is not in the cache (e.g. a newly online
+  machine), the cache is refreshed automatically — at most once every 60 seconds.
+  So a new peer becomes resolvable within 60 seconds of the first lookup attempt,
+  without any manual intervention.
+- A peer that goes **offline** is not removed from the cache until the 24-hour TTL
+  expires. To force an immediate refresh (e.g. after a peer disconnects), delete
+  the cache file:
   ```bash
   sudo rm /var/cache/tailscale-nss/peers.cache
   ```
