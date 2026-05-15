@@ -99,13 +99,13 @@ Place it **before** `dns` so the module is consulted first, and **after**
 
 ```bash
 # Forward lookup
-getent hosts elitebook.tail
+getent hosts myhost.tail
 
 # With ping
-ping elitebook.tail
+ping myhost.tail
 
 # Reverse lookup
-getent hosts 100.66.68.66
+getent hosts 100.10.10.10
 ```
 
 ## Uninstall
